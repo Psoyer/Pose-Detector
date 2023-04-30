@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.camera:camera-camera2:1.0.0-SNAPSHOT@aar">
+    <ANNOTATIONS>
+      <root url="jar://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/3f810d2a757a616e00ff8c338c0f588b/transformed/jetified-camera-camera2-1.0.0-SNAPSHOT/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/3f810d2a757a616e00ff8c338c0f588b/transformed/jetified-camera-camera2-1.0.0-SNAPSHOT/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/3f810d2a757a616e00ff8c338c0f588b/transformed/jetified-camera-camera2-1.0.0-SNAPSHOT/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/3f810d2a757a616e00ff8c338c0f588b/transformed/jetified-camera-camera2-1.0.0-SNAPSHOT/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/modules-2/files-2.1/androidx.camera/camera-camera2/1.0.0-SNAPSHOT/25b327568c8abf5e4715f0ba8478ca206d90086c/camera-camera2-1.0.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

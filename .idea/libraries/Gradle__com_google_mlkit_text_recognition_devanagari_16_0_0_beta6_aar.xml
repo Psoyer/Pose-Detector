@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.mlkit:text-recognition-devanagari:16.0.0-beta6@aar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/42374fecbed73f0fd43017e18a2802b5/transformed/jetified-text-recognition-devanagari-16.0.0-beta6/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/42374fecbed73f0fd43017e18a2802b5/transformed/jetified-text-recognition-devanagari-16.0.0-beta6/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/42374fecbed73f0fd43017e18a2802b5/transformed/jetified-text-recognition-devanagari-16.0.0-beta6/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/modules-2/files-2.1/com.google.mlkit/text-recognition-devanagari/16.0.0-beta6/896f3f6a85f10c5ec2f02c794fb60a3cf6073fa0/text-recognition-devanagari-16.0.0-beta6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

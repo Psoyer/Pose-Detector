@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.mlkit:image-labeling-custom-common:17.0.0@aar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/1ec839c5233810f028e6d0bc24ac970f/transformed/jetified-image-labeling-custom-common-17.0.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/1ec839c5233810f028e6d0bc24ac970f/transformed/jetified-image-labeling-custom-common-17.0.0/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/transforms-3/1ec839c5233810f028e6d0bc24ac970f/transformed/jetified-image-labeling-custom-common-17.0.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../Android/workspace/.gradle/caches/modules-2/files-2.1/com.google.mlkit/image-labeling-custom-common/17.0.0/9f23659d1c0c9bb64f58df0e2c86d7cea145c23b/image-labeling-custom-common-17.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
