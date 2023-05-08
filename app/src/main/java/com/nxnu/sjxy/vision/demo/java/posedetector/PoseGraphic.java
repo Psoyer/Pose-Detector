@@ -9,9 +9,11 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.speech.tts.TextToSpeech;
 
 import com.google.mlkit.vision.common.PointF3D;
 import com.nxnu.sjxy.vision.demo.GraphicOverlay;
@@ -46,7 +48,10 @@ public class PoseGraphic extends Graphic {
     private final Paint whitePaint;
     private final Paint textPaint;
 
+    private final TextToSpeech textToSpeech;
+
     PoseGraphic(
+            TextToSpeech textToSpeech,
             GraphicOverlay overlay,
             Pose pose,
             boolean showInFrameLikelihood,
@@ -54,6 +59,8 @@ public class PoseGraphic extends Graphic {
             boolean rescaleZForVisualization,
             List<String> poseClassification) {
         super(overlay);
+        this.textToSpeech = textToSpeech;
+
         this.pose = pose;
         this.showInFrameLikelihood = showInFrameLikelihood;
         this.visualizeZ = visualizeZ;
@@ -235,6 +242,11 @@ public class PoseGraphic extends Graphic {
     void drawAngle(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
         PointF3D point = midPoint.getPosition3D();
         double angle = getAngle(firstPoint, midPoint, lastPoint);
+        if (midPoint == pose.getPoseLandmark(PoseLandmark.LEFT_ELBOW) && angle < 90.0){
+            textToSpeech.speak("Left elbow angle too small",
+                    TextToSpeech.QUEUE_ADD, null);
+            System.out.println("-------------------------------------");
+        }
         canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
 
     }

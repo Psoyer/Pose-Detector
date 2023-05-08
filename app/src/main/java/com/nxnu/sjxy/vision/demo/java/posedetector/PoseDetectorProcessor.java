@@ -6,6 +6,7 @@
 package com.nxnu.sjxy.vision.demo.java.posedetector;
 
 import android.content.Context;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
@@ -39,6 +40,8 @@ public class PoseDetectorProcessor
   private final Executor classificationExecutor;
 
   private PoseClassifierProcessor poseClassifierProcessor;
+
+  private TextToSpeech textToSpeech; // Android TTS
   /** 用于保存姿势和分类结果的内部类。 */
   protected static class PoseWithClassification {
     private final Pose pose;
@@ -65,6 +68,7 @@ public class PoseDetectorProcessor
       boolean visualizeZ,
       boolean rescaleZForVisualization,
       boolean runClassification,
+      TextToSpeech textToSpeech,
       boolean isStreamMode) {
     super(context);
     this.showInFrameLikelihood = showInFrameLikelihood;
@@ -74,6 +78,7 @@ public class PoseDetectorProcessor
     this.runClassification = runClassification;
     this.isStreamMode = isStreamMode;
     this.context = context;
+    this.textToSpeech = textToSpeech;
     classificationExecutor = Executors.newSingleThreadExecutor();
   }
 
@@ -127,6 +132,7 @@ public class PoseDetectorProcessor
       @NonNull GraphicOverlay graphicOverlay) {
     graphicOverlay.add(
         new PoseGraphic(
+            textToSpeech,
             graphicOverlay,
             poseWithClassification.pose,
             showInFrameLikelihood,

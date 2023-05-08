@@ -22,11 +22,13 @@ import java.util.ArrayList
 class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
 
   override fun onCreate(savedInstanceState: Bundle?) {
+
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_vision_entry_choice)
 
     findViewById<TextView>(R.id.java_entry_point).setOnClickListener {
       val intent = Intent(this@EntryChoiceActivity, LivePreviewActivity::class.java)
+
       startActivity(intent)
     }
 

@@ -10,6 +10,8 @@ package com.nxnu.sjxy.vision.demo.java;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,17 +29,17 @@ import com.nxnu.sjxy.vision.demo.GraphicOverlay;
 import com.google.mlkit.vision.demo.R;
 import com.nxnu.sjxy.vision.demo.java.posedetector.PoseDetectorProcessor;
 import com.nxnu.sjxy.vision.demo.preference.PreferenceUtils;
-import com.nxnu.sjxy.vision.demo.preference.SettingsActivity;
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /** 主界面 */
 @KeepName
 public final class LivePreviewActivity extends AppCompatActivity
-    implements OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
+        implements OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, TextToSpeech.OnInitListener {
   private static final String POSE_DETECTION = "Pose Detection";
 
   private static final String TAG = "LivePreviewActivity";
@@ -46,6 +48,7 @@ public final class LivePreviewActivity extends AppCompatActivity
   private CameraSourcePreview preview;
   private GraphicOverlay graphicOverlay;
   private String selectedModel = POSE_DETECTION;
+  private TextToSpeech textToSpeech;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,8 @@ public final class LivePreviewActivity extends AppCompatActivity
       Log.d(TAG, "graphicOverlay is null");
     }
 
+    // 初始化Android TTS
+    initTTS();
     Spinner spinner = findViewById(R.id.spinner);
     List<String> options = new ArrayList<>();
     options.add(POSE_DETECTION);
@@ -83,6 +88,11 @@ public final class LivePreviewActivity extends AppCompatActivity
     settingsButton.setVisibility(View.INVISIBLE);
 
     createCameraSource(selectedModel);
+  }
+
+  public void initTTS(){
+    textToSpeech = new TextToSpeech(this, this);
+
   }
 
   @Override
@@ -140,6 +150,7 @@ public final class LivePreviewActivity extends AppCompatActivity
                           visualizeZ,
                           rescaleZ,
                           runClassification,
+                          textToSpeech,
                           /* isStreamMode = */ true));
           break;
         default:
@@ -197,6 +208,30 @@ public final class LivePreviewActivity extends AppCompatActivity
     super.onDestroy();
     if (cameraSource != null) {
       cameraSource.release();
+    }
+  }
+
+  // Android TTS Init
+  @Override
+  public void onInit(int i) {
+    if (i == TextToSpeech.SUCCESS) {
+      Log.d(TAG, "init success");
+      //设置语言
+      int result = textToSpeech.setLanguage(Locale.US);
+      System.out.println("--------==========="+result);
+      if (result != TextToSpeech.LANG_COUNTRY_AVAILABLE
+              && result != TextToSpeech.LANG_AVAILABLE) {
+        Toast.makeText(this, "TTS暂时不支持这种语音的朗读！",
+                Toast.LENGTH_SHORT).show();
+      }
+      //设置音调
+      textToSpeech.setPitch(1.0f);
+      //设置语速，1.0为正常语速
+      textToSpeech.setSpeechRate(1.5f);
+      textToSpeech.speak("Hello",
+              TextToSpeech.QUEUE_ADD, null);
+    } else {
+      Log.d(TAG, "init fail");
     }
   }
 }
