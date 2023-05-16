@@ -33,6 +33,7 @@ import com.google.mlkit.vision.pose.PoseDetectorOptionsBase;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,7 +50,12 @@ public final class LivePreviewActivity extends AppCompatActivity
   private GraphicOverlay graphicOverlay;
   private String selectedModel = POSE_DETECTION;
   private TextToSpeech textToSpeech;
+  public static String cueText;
 
+  private HashMap<String, String> cueWord;
+
+  private Thread ttsThread;
+  private boolean ttsThreadFlag = true;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -65,6 +71,26 @@ public final class LivePreviewActivity extends AppCompatActivity
     if (graphicOverlay == null) {
       Log.d(TAG, "graphicOverlay is null");
     }
+
+    // 打印当前主线程id
+    System.out.println("主线程id：===="+android.os.Process.myTid());
+    ttsThread =  new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while (ttsThreadFlag){
+          try {
+            Thread.sleep(5000);
+            System.out.println("当前播报内容" + cueText);
+            textToSpeech.speak(cueWord.get(cueText),
+                    TextToSpeech.QUEUE_ADD, null);
+          } catch (Exception e){
+            Log.d(TAG,e.toString());
+          }
+        }
+
+      }
+    });//启动线程
+    ttsThread.start();
 
     // 初始化Android TTS
     initTTS();
@@ -92,6 +118,20 @@ public final class LivePreviewActivity extends AppCompatActivity
 
   public void initTTS(){
     textToSpeech = new TextToSpeech(this, this);
+    cueWord = new HashMap<>();
+    cueWord.put("leftElbowLarge", "左手肘角度偏大");
+    cueWord.put("leftElbowSmall", "左手肘角度偏小");
+    cueWord.put("rightElbowLarge", "右手肘角度偏大");
+    cueWord.put("rightElbowSmall", "右手肘角度偏小");
+    cueWord.put("leftShoulderLarge", "左肩膀角度偏大");
+    cueWord.put("leftShoulderSmall", "左肩膀角度偏小");
+    cueWord.put("rightShoulderLarge", "右肩膀角度偏大");
+    cueWord.put("rightShoulderSmall", "右肩膀角度偏小");
+    cueWord.put("leftKneeLarge", "左膝盖角度偏大");
+    cueWord.put("leftKneeSmall", "左膝盖角度偏小");
+    cueWord.put("rightKneeLarge", "右膝盖角度偏大");
+    cueWord.put("rightKneeSmall", "右膝盖角度偏小");
+    cueWord.put("perfect","您的姿势很完美");
 
   }
 
@@ -209,6 +249,11 @@ public final class LivePreviewActivity extends AppCompatActivity
     if (cameraSource != null) {
       cameraSource.release();
     }
+    if(!textToSpeech.isSpeaking()) {
+      textToSpeech.stop(); // 不管是否正在朗读TTS都被打断
+      textToSpeech.shutdown(); // 关闭，释放资源
+    }
+    ttsThreadFlag = false; //销毁tts线程
   }
 
   // Android TTS Init
@@ -217,8 +262,7 @@ public final class LivePreviewActivity extends AppCompatActivity
     if (i == TextToSpeech.SUCCESS) {
       Log.d(TAG, "init success");
       //设置语言
-      int result = textToSpeech.setLanguage(Locale.US);
-      System.out.println("--------==========="+result);
+      int result = textToSpeech.setLanguage(Locale.CHINESE);
       if (result != TextToSpeech.LANG_COUNTRY_AVAILABLE
               && result != TextToSpeech.LANG_AVAILABLE) {
         Toast.makeText(this, "TTS暂时不支持这种语音的朗读！",
@@ -228,8 +272,8 @@ public final class LivePreviewActivity extends AppCompatActivity
       textToSpeech.setPitch(1.0f);
       //设置语速，1.0为正常语速
       textToSpeech.setSpeechRate(1.5f);
-      textToSpeech.speak("Hello",
-              TextToSpeech.QUEUE_ADD, null);
+//      textToSpeech.speak("TTS完成初始化",
+//              TextToSpeech.QUEUE_ADD, null);
     } else {
       Log.d(TAG, "init fail");
     }

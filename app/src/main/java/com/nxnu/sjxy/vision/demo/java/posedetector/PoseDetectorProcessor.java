@@ -42,6 +42,7 @@ public class PoseDetectorProcessor
   private PoseClassifierProcessor poseClassifierProcessor;
 
   private TextToSpeech textToSpeech; // Android TTS
+
   /** 用于保存姿势和分类结果的内部类。 */
   protected static class PoseWithClassification {
     private final Pose pose;
@@ -80,6 +81,8 @@ public class PoseDetectorProcessor
     this.context = context;
     this.textToSpeech = textToSpeech;
     classificationExecutor = Executors.newSingleThreadExecutor();
+
+
   }
 
   @Override
@@ -126,6 +129,7 @@ public class PoseDetectorProcessor
             });
   }
 
+
   @Override
   protected void onSuccess(
       @NonNull PoseWithClassification poseWithClassification,
@@ -139,6 +143,8 @@ public class PoseDetectorProcessor
             visualizeZ,
             rescaleZForVisualization,
             poseWithClassification.classificationResult));
+
+
   }
 
   @Override

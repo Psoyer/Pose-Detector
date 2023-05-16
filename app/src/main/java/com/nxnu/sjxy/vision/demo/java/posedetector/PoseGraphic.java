@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 
 import com.google.mlkit.vision.common.PointF3D;
@@ -20,7 +21,9 @@ import com.nxnu.sjxy.vision.demo.GraphicOverlay;
 import com.nxnu.sjxy.vision.demo.GraphicOverlay.Graphic;
 import com.google.mlkit.vision.pose.Pose;
 import com.google.mlkit.vision.pose.PoseLandmark;
+import com.nxnu.sjxy.vision.demo.java.LivePreviewActivity;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,6 +52,10 @@ public class PoseGraphic extends Graphic {
     private final Paint textPaint;
 
     private final TextToSpeech textToSpeech;
+
+    private HashMap<String, Double> standardAngle;
+    private String cueText = "";
+    private double maxAngle = 0;
 
     PoseGraphic(
             TextToSpeech textToSpeech,
@@ -86,7 +93,19 @@ public class PoseGraphic extends Graphic {
         rightPaint = new Paint();
         rightPaint.setStrokeWidth(STROKE_WIDTH);
         rightPaint.setColor(Color.YELLOW);
+
+        // TTS提示词
+
+
+        standardAngle = new HashMap<>();
+        standardAngle.put("leftElbow", 90.0);
+        standardAngle.put("rightElbow", 90.0);
+        standardAngle.put("leftShoulder", 180.0);
+        standardAngle.put("rightShoulder", 180.0);
+        standardAngle.put("leftKnee", 20.0);
+        standardAngle.put("rightKnee", 20.0);
     }
+
 
     @Override
     public void draw(Canvas canvas) {
@@ -96,35 +115,35 @@ public class PoseGraphic extends Graphic {
         }
 
         // 绘制姿势分类信息
-        float classificationX = POSE_CLASSIFICATION_TEXT_SIZE * 0.5f;
-        for (int i = 0; i < poseClassification.size(); i++) {
-            float classificationY =
-                    (canvas.getHeight()
-                            - POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size() - i));
-            canvas.drawText(
-                    poseClassification.get(i), classificationX, classificationY, classificationTextPaint);
-        }
+//        float classificationX = POSE_CLASSIFICATION_TEXT_SIZE * 0.5f;
+//        for (int i = 0; i < poseClassification.size(); i++) {
+//            float classificationY =
+//                    (canvas.getHeight()
+//                            - POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size() - i));
+//            canvas.drawText(
+//                    "poseClassification.get(i)", classificationX, classificationY, classificationTextPaint);
+//        }
 
         // 画出所有关键点
-        for (PoseLandmark landmark : landmarks) {
-            drawPoint(canvas, landmark, whitePaint);
-            if (visualizeZ && rescaleZForVisualization) {
-                zMin = min(zMin, landmark.getPosition3D().getZ());
-                zMax = max(zMax, landmark.getPosition3D().getZ());
-            }
-        }
+//        for (PoseLandmark landmark : landmarks) {
+//            drawPoint(canvas, landmark, whitePaint);
+//            if (visualizeZ && rescaleZForVisualization) {
+//                zMin = min(zMin, landmark.getPosition3D().getZ());
+//                zMax = max(zMax, landmark.getPosition3D().getZ());
+//            }
+//        }
 
-        PoseLandmark nose = pose.getPoseLandmark(PoseLandmark.NOSE);
-        PoseLandmark lefyEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER);
-        PoseLandmark lefyEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE);
-        PoseLandmark leftEyeOuter = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER);
-        PoseLandmark rightEyeInner = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE_INNER);
-        PoseLandmark rightEye = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE);
-        PoseLandmark rightEyeOuter = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE_OUTER);
-        PoseLandmark leftEar = pose.getPoseLandmark(PoseLandmark.LEFT_EAR);
-        PoseLandmark rightEar = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR);
-        PoseLandmark leftMouth = pose.getPoseLandmark(PoseLandmark.LEFT_MOUTH);
-        PoseLandmark rightMouth = pose.getPoseLandmark(PoseLandmark.RIGHT_MOUTH);
+//        PoseLandmark nose = pose.getPoseLandmark(PoseLandmark.NOSE);
+//        PoseLandmark lefyEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER);
+//        PoseLandmark lefyEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE);
+//        PoseLandmark leftEyeOuter = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER);
+//        PoseLandmark rightEyeInner = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE_INNER);
+//        PoseLandmark rightEye = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE);
+//        PoseLandmark rightEyeOuter = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE_OUTER);
+//        PoseLandmark leftEar = pose.getPoseLandmark(PoseLandmark.LEFT_EAR);
+//        PoseLandmark rightEar = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR);
+//        PoseLandmark leftMouth = pose.getPoseLandmark(PoseLandmark.LEFT_MOUTH);
+//        PoseLandmark rightMouth = pose.getPoseLandmark(PoseLandmark.RIGHT_MOUTH);
 
         PoseLandmark leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER);
         PoseLandmark rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER);
@@ -151,31 +170,16 @@ public class PoseGraphic extends Graphic {
         PoseLandmark rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX);
 
         // Face
-        assert lefyEyeInner != null;
-        assert nose != null;
-        assert leftEyeOuter != null;
-        assert lefyEye != null;
-        assert leftEar != null;
-        assert rightEyeInner != null;
-        assert rightEye != null;
-        assert rightEyeOuter != null;
-        assert rightEar != null;
-        assert rightMouth != null;
-        assert leftMouth != null;
-        assert leftShoulder != null;
-        assert rightShoulder != null;
-        assert rightHip != null;
-        assert leftHip != null;
-        drawLine(canvas, nose, lefyEyeInner, whitePaint);
-        drawLine(canvas, lefyEyeInner, lefyEye, whitePaint);
-        drawLine(canvas, lefyEye, leftEyeOuter, whitePaint);
-        drawLine(canvas, leftEyeOuter, leftEar, whitePaint);
-        drawLine(canvas, nose, rightEyeInner, whitePaint);
-        drawLine(canvas, rightEyeInner, rightEye, whitePaint);
-        drawLine(canvas, rightEye, rightEyeOuter, whitePaint);
-        drawLine(canvas, rightEyeOuter, rightEar, whitePaint);
-        drawLine(canvas, leftMouth, rightMouth, whitePaint);
-
+//        drawLine(canvas, nose, lefyEyeInner, whitePaint);
+//        drawLine(canvas, lefyEyeInner, lefyEye, whitePaint);
+//        drawLine(canvas, lefyEye, leftEyeOuter, whitePaint);
+//        drawLine(canvas, leftEyeOuter, leftEar, whitePaint);
+//        drawLine(canvas, nose, rightEyeInner, whitePaint);
+//        drawLine(canvas, rightEyeInner, rightEye, whitePaint);
+//        drawLine(canvas, rightEye, rightEyeOuter, whitePaint);
+//        drawLine(canvas, rightEyeOuter, rightEar, whitePaint);
+//        drawLine(canvas, leftMouth, rightMouth, whitePaint);
+//
         drawLine(canvas, leftShoulder, rightShoulder, whitePaint);
         drawLine(canvas, leftHip, rightHip, whitePaint);
 
@@ -208,29 +212,36 @@ public class PoseGraphic extends Graphic {
         //角度信息
 
         //手肘
-        drawAngle(canvas, leftElbow, leftShoulder, leftWrist, textPaint);
-        drawAngle(canvas, rightElbow, rightShoulder, rightWrist, textPaint);
+        drawAngleLeftElbow(canvas, leftElbow, leftShoulder, leftWrist, textPaint);
+        drawAngleRightElbow(canvas, rightElbow, rightShoulder, rightWrist, textPaint);
         //肩部
-        drawAngle(canvas, leftShoulder, rightShoulder, leftElbow, textPaint);
-        drawAngle(canvas, rightShoulder, leftShoulder, rightElbow, textPaint);
+        drawAngleLeftShoulder(canvas, leftShoulder, rightShoulder, leftElbow, textPaint);
+        drawAngleRightShoulder(canvas, rightShoulder, leftShoulder, rightElbow, textPaint);
         //膝盖
-        drawAngle(canvas, leftKnee, leftHip, leftAnkle, textPaint);
-        drawAngle(canvas, rightKnee, rightHip, rightAnkle, textPaint);
-        //腰部
-        drawAngle(canvas, leftHip, leftShoulder, leftKnee, textPaint);
-        drawAngle(canvas, rightHip, rightShoulder, rightKnee, textPaint);
+        drawAngleLeftKnee(canvas, leftKnee, leftHip, leftAnkle, textPaint);
+        drawAngleRightKnee(canvas, rightKnee, rightHip, rightAnkle, textPaint);
+        //腰部 (不常用)
+//        drawAngle(canvas, leftHip, leftShoulder, leftKnee, textPaint);
+//        drawAngle(canvas, rightHip, rightShoulder, rightKnee, textPaint);
 
         // Draw inFrameLikelihood for all points
-        if (showInFrameLikelihood) {
-            for (PoseLandmark landmark : landmarks) {
-                canvas.drawText(
-                        String.format(Locale.US, "%.2f", landmark.getInFrameLikelihood()),
-                        translateX(landmark.getPosition().x),
-                        translateY(landmark.getPosition().y),
-                        whitePaint);
-            }
+//        if (showInFrameLikelihood) {
+//            for (PoseLandmark landmark : landmarks) {
+//                canvas.drawText(
+//                        String.format(Locale.US, "%.2f", landmark.getInFrameLikelihood()),
+//                        translateX(landmark.getPosition().x),
+//                        translateY(landmark.getPosition().y),
+//                        whitePaint);
+//            }
+//        }
+//        System.out.println("子线程id：====" + android.os.Process.myTid());
+        if (maxAngle > 10.0){
+            LivePreviewActivity.cueText = cueText;
+        } else {
+            LivePreviewActivity.cueText = "perfect";
         }
     }
+
 
     void drawPoint(Canvas canvas, PoseLandmark landmark, Paint paint) {
         PointF3D point = landmark.getPosition3D();
@@ -239,17 +250,81 @@ public class PoseGraphic extends Graphic {
         canvas.drawCircle(translateX(point.getX()), translateY(point.getY()), DOT_RADIUS, paint);
     }
 
-    void drawAngle(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
+    //    根据角度语音提示 代码群
+    void drawAngleLeftElbow(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
+//        PointF3D point = midPoint.getPosition3D();
+        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - standardAngle.get("leftElbow");
+//        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
+        if (angleDiffer > 0 && angleDiffer > maxAngle){
+            cueText = "leftElbowLarge";
+            maxAngle = angleDiffer;
+        }
+        if (angleDiffer < 0 && angleDiffer*-1 > maxAngle){
+            System.out.println("小于"+angleDiffer);
+            cueText = "leftElbowSmall";
+            maxAngle = angleDiffer * -1.0;
+        }
+    }
+
+    void drawAngleRightElbow(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
+//        PointF3D point = midPoint.getPosition3D();
+        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - standardAngle.get("rightElbow");
+//        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
+        if (angleDiffer > 0 && angleDiffer > maxAngle){
+            cueText = "rightElbowLarge";
+            maxAngle = angleDiffer;
+        }
+        if (angleDiffer < 0 && angleDiffer*-1 > maxAngle){
+            System.out.println("小于"+angleDiffer);
+            cueText = "rightElbowSmall";
+            maxAngle = angleDiffer * -1.0;
+        }
+    }
+
+    void drawAngleLeftShoulder(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
+//        PointF3D point = midPoint.getPosition3D();
+//        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - standardAngle.get("leftShoulder");
+//        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
+//        if (angleDiffer > 0 && angleDiffer > maxAngle){
+//            cueText = "leftShoulderLarge";
+//            maxAngle = angleDiffer;
+//        }
+//        if (angleDiffer < 0 && angleDiffer > maxAngle){
+//            cueText = "leftShoulderSmall";
+//            maxAngle = angleDiffer * -1.0;
+//        }
+    }
+
+    void drawAngleRightShoulder(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
+//        PointF3D point = midPoint.getPosition3D();
+//        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - standardAngle.get("rightShoulder");
+//        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
+//        if (angleDiffer > 0 && angleDiffer > maxAngle){
+//            cueText = "RightShoulderLarge";
+//            maxAngle = angleDiffer;
+//        }
+//        if (angleDiffer < 0 && angleDiffer > maxAngle){
+//
+//            cueText = "RightShoulderSmall";
+//            maxAngle = angleDiffer * -1.0;
+//        }
+    }
+
+    void drawAngleLeftKnee(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
         PointF3D point = midPoint.getPosition3D();
         double angle = getAngle(firstPoint, midPoint, lastPoint);
-        if (midPoint == pose.getPoseLandmark(PoseLandmark.LEFT_ELBOW) && angle < 90.0){
-            textToSpeech.speak("Left elbow angle too small",
-                    TextToSpeech.QUEUE_ADD, null);
-            System.out.println("-------------------------------------");
-        }
         canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
 
     }
+
+    void drawAngleRightKnee(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
+        PointF3D point = midPoint.getPosition3D();
+        double angle = getAngle(firstPoint, midPoint, lastPoint);
+        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
+
+    }
+    // 代码群结束
+
 
     void drawLine(Canvas canvas, PoseLandmark startLandmark, PoseLandmark endLandmark, Paint paint) {
         PointF3D start = startLandmark.getPosition3D();
