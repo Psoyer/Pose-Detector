@@ -5,4 +5,4 @@
     android:layout_height="wrap_content"
     android:padding="12dp"
     android:contentDescription="@string/menu_item_settings"
-    android:src="@drawable/ic_settings_white_24dp"/>
+    android:src="@drawable/ic_end_training_24dp"/>

@@ -49,6 +49,7 @@ android {
 repositories {
     // Depending on AndroidX Snapshot Builds to get the latest CameraX libs.
     maven { url 'https://androidx.dev/snapshots/builds/6787662/artifacts/repository/' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -112,6 +113,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.guava:guava:27.1-android'
+    implementation 'com.google.android.material:material:1.4.0'
 
     // For how to setup gradle dependencies in Android X, see:
     // https://developer.android.com/training/testing/set-up-project#gradle-dependencies
@@ -140,6 +142,10 @@ dependencies {
 
     // On Device Machine Learnings
     implementation "com.google.android.odml:image:1.0.0-beta1"
+
+    // Analysis page circular rating circle
+    implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }
 
 configurations {

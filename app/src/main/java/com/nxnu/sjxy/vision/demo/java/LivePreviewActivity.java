@@ -14,11 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
+
 import android.widget.CompoundButton;
-import android.widget.ImageView;
+
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -40,7 +38,7 @@ import java.util.Locale;
 /** 主界面 */
 @KeepName
 public final class LivePreviewActivity extends AppCompatActivity
-        implements OnItemSelectedListener, CompoundButton.OnCheckedChangeListener, TextToSpeech.OnInitListener {
+        implements CompoundButton.OnCheckedChangeListener, TextToSpeech.OnInitListener {
   private static final String POSE_DETECTION = "Pose Detection";
 
   private static final String TAG = "LivePreviewActivity";
@@ -56,6 +54,7 @@ public final class LivePreviewActivity extends AppCompatActivity
 
   private Thread ttsThread;
   private boolean ttsThreadFlag = true;
+  private List<String> analyzeData;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -77,10 +76,12 @@ public final class LivePreviewActivity extends AppCompatActivity
     ttsThread =  new Thread(new Runnable() {
       @Override
       public void run() {
+        analyzeData= new ArrayList();
         while (ttsThreadFlag){
           try {
             Thread.sleep(5000);
             System.out.println("当前播报内容" + cueText);
+            analyzeData.add(cueText);
             textToSpeech.speak(cueWord.get(cueText),
                     TextToSpeech.QUEUE_ADD, null);
           } catch (Exception e){
@@ -98,20 +99,27 @@ public final class LivePreviewActivity extends AppCompatActivity
     List<String> options = new ArrayList<>();
     options.add(POSE_DETECTION);
 
-    // 选择列表适配器
-    ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_style, options);
-    // 下拉布局样式-带有单选按钮的列表视图
-    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    // 将数据适配器连接到微调器
-    spinner.setAdapter(dataAdapter);
-    spinner.setOnItemSelectedListener(this);
+    selectedModel = POSE_DETECTION;
+    Log.d(TAG, "Selected model: " + selectedModel);
+    preview.stop();
+    createCameraSource(selectedModel);
+    startCameraSource();
 
     // 前后摄像头选择器
     ToggleButton facingSwitch = findViewById(R.id.facing_switch);
     facingSwitch.setOnCheckedChangeListener(this);
 
-    ImageView settingsButton = findViewById(R.id.settings_button);
-    settingsButton.setVisibility(View.INVISIBLE);
+    // 结束训练，跳转分析界面
+    findViewById(R.id.end_button).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent afterTrainingActivity = new Intent(LivePreviewActivity.this,AfterTrainingActivity.class);
+        afterTrainingActivity.putExtra("analyzeData", analyzeData.toArray(new String[analyzeData.size()]));
+        startActivity(afterTrainingActivity);
+        finish();
+      }
+    });
+
 
     createCameraSource(selectedModel);
   }
@@ -135,21 +143,7 @@ public final class LivePreviewActivity extends AppCompatActivity
 
   }
 
-  @Override
-  public synchronized void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-    // 已选择一个项目。可以使用检索所选项目
-    // parent.getItemAtPosition(pos)
-    selectedModel = parent.getItemAtPosition(pos).toString();
-    Log.d(TAG, "Selected model: " + selectedModel);
-    preview.stop();
-    createCameraSource(selectedModel);
-    startCameraSource();
-  }
 
-  @Override
-  public void onNothingSelected(AdapterView<?> parent) {
-    // Do nothing.
-  }
 
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -240,7 +234,14 @@ public final class LivePreviewActivity extends AppCompatActivity
   @Override
   protected void onPause() {
     super.onPause();
-    preview.stop();
+    if (cameraSource != null) {
+      cameraSource.release();
+    }
+    if(!textToSpeech.isSpeaking()) {
+      textToSpeech.stop(); // 不管是否正在朗读TTS都被打断
+      textToSpeech.shutdown(); // 关闭，释放资源
+    }
+    ttsThreadFlag = false; //销毁tts线程
   }
 
   @Override
