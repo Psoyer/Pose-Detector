@@ -69,7 +69,6 @@ public class PoseDetectorProcessor
       boolean visualizeZ,
       boolean rescaleZForVisualization,
       boolean runClassification,
-      TextToSpeech textToSpeech,
       boolean isStreamMode) {
     super(context);
     this.showInFrameLikelihood = showInFrameLikelihood;
@@ -136,7 +135,6 @@ public class PoseDetectorProcessor
       @NonNull GraphicOverlay graphicOverlay) {
     graphicOverlay.add(
         new PoseGraphic(
-            textToSpeech,
             graphicOverlay,
             poseWithClassification.pose,
             showInFrameLikelihood,

@@ -42,7 +42,6 @@ public final class LivePreviewActivity extends AppCompatActivity
   private static final String POSE_DETECTION = "Pose Detection";
 
   private static final String TAG = "LivePreviewActivity";
-
   private CameraSource cameraSource = null;
   private CameraSourcePreview preview;
   private GraphicOverlay graphicOverlay;
@@ -184,7 +183,6 @@ public final class LivePreviewActivity extends AppCompatActivity
                           visualizeZ,
                           rescaleZ,
                           runClassification,
-                          textToSpeech,
                           /* isStreamMode = */ true));
           break;
         default:

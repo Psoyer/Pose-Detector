@@ -51,14 +51,12 @@ public class PoseGraphic extends Graphic {
     private final Paint whitePaint;
     private final Paint textPaint;
 
-    private final TextToSpeech textToSpeech;
 
     private HashMap<String, Double> standardAngle;
     private String cueText = "";
     private double maxAngle = 0;
 
     PoseGraphic(
-            TextToSpeech textToSpeech,
             GraphicOverlay overlay,
             Pose pose,
             boolean showInFrameLikelihood,
@@ -66,7 +64,7 @@ public class PoseGraphic extends Graphic {
             boolean rescaleZForVisualization,
             List<String> poseClassification) {
         super(overlay);
-        this.textToSpeech = textToSpeech;
+
 
         this.pose = pose;
         this.showInFrameLikelihood = showInFrameLikelihood;
