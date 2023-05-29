@@ -1,0 +1,74 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+    <!-- 这是个线性布局， match_parent意思是与上级视图保持一致-->
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="17dp"
+        android:textSize="25sp"
+        android:textColor="#9400D3"
+        android:text="AI 羽毛球" />
+    <ImageButton
+        android:id="@+id/in1"
+        android:layout_width="268dp"
+        android:layout_height="110dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#Ffffff"
+        android:layout_gravity="center"
+        android:layout_marginTop="45dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/image10" />
+
+    <ImageButton
+        android:id="@+id/in2"
+        android:layout_width="268dp"
+        android:layout_height="110dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="45dp"
+
+        android:background="#Ffffff"
+        app:srcCompat="@drawable/image11" />
+
+    <ImageButton
+        android:id="@+id/in3"
+        android:layout_width="268dp"
+        android:layout_height="110dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="45dp"
+        android:background="#Ffffff"
+        app:srcCompat="@drawable/image12" />
+
+    <ImageButton
+        android:id="@+id/in4"
+        android:layout_width="268dp"
+        android:layout_height="110dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="45dp"
+        android:scaleType="fitCenter"
+        android:background="#Ffffff"
+        app:srcCompat="@drawable/image13" />
+
+
+
+</LinearLayout>

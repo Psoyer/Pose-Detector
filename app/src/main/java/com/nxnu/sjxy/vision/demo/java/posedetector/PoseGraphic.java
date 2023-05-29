@@ -52,7 +52,6 @@ public class PoseGraphic extends Graphic {
     private final Paint textPaint;
 
 
-    private HashMap<String, Double> standardAngle;
     private String cueText = "";
     private double maxAngle = 0;
 
@@ -92,16 +91,6 @@ public class PoseGraphic extends Graphic {
         rightPaint.setStrokeWidth(STROKE_WIDTH);
         rightPaint.setColor(Color.YELLOW);
 
-        // TTS提示词
-
-
-        standardAngle = new HashMap<>();
-        standardAngle.put("leftElbow", 90.0);
-        standardAngle.put("rightElbow", 90.0);
-        standardAngle.put("leftShoulder", 180.0);
-        standardAngle.put("rightShoulder", 180.0);
-        standardAngle.put("leftKnee", 20.0);
-        standardAngle.put("rightKnee", 20.0);
     }
 
 
@@ -233,7 +222,7 @@ public class PoseGraphic extends Graphic {
 //            }
 //        }
 //        System.out.println("子线程id：====" + android.os.Process.myTid());
-        if (maxAngle > 10.0){
+        if (maxAngle > 15.0){
             LivePreviewActivity.cueText = cueText;
         } else {
             LivePreviewActivity.cueText = "perfect";
@@ -251,7 +240,7 @@ public class PoseGraphic extends Graphic {
     //    根据角度语音提示 代码群
     void drawAngleLeftElbow(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
 //        PointF3D point = midPoint.getPosition3D();
-        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - standardAngle.get("leftElbow");
+        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - LivePreviewActivity.standardAngle.get("leftElbow");
 //        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
         if (angleDiffer > 0 && angleDiffer > maxAngle){
             cueText = "leftElbowLarge";
@@ -266,7 +255,7 @@ public class PoseGraphic extends Graphic {
 
     void drawAngleRightElbow(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
 //        PointF3D point = midPoint.getPosition3D();
-        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - standardAngle.get("rightElbow");
+        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - LivePreviewActivity.standardAngle.get("rightElbow");
 //        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
         if (angleDiffer > 0 && angleDiffer > maxAngle){
             cueText = "rightElbowLarge";
@@ -281,45 +270,63 @@ public class PoseGraphic extends Graphic {
 
     void drawAngleLeftShoulder(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
 //        PointF3D point = midPoint.getPosition3D();
-//        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - standardAngle.get("leftShoulder");
+        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - LivePreviewActivity.standardAngle.get("leftShoulder");
 //        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
-//        if (angleDiffer > 0 && angleDiffer > maxAngle){
-//            cueText = "leftShoulderLarge";
-//            maxAngle = angleDiffer;
-//        }
-//        if (angleDiffer < 0 && angleDiffer > maxAngle){
-//            cueText = "leftShoulderSmall";
-//            maxAngle = angleDiffer * -1.0;
-//        }
+        if (angleDiffer > 0 && angleDiffer > maxAngle){
+            cueText = "leftShoulderLarge";
+            maxAngle = angleDiffer;
+        }
+        if (angleDiffer < 0 && angleDiffer*-1 > maxAngle){
+            System.out.println("小于"+angleDiffer);
+            cueText = "leftShoulderSmall";
+            maxAngle = angleDiffer * -1.0;
+        }
     }
 
     void drawAngleRightShoulder(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
 //        PointF3D point = midPoint.getPosition3D();
-//        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - standardAngle.get("rightShoulder");
+        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - LivePreviewActivity.standardAngle.get("rightShoulder");
 //        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
-//        if (angleDiffer > 0 && angleDiffer > maxAngle){
-//            cueText = "RightShoulderLarge";
-//            maxAngle = angleDiffer;
-//        }
-//        if (angleDiffer < 0 && angleDiffer > maxAngle){
-//
-//            cueText = "RightShoulderSmall";
-//            maxAngle = angleDiffer * -1.0;
-//        }
+        if (angleDiffer > 0 && angleDiffer > maxAngle){
+            cueText = "rightShoulderLarge";
+            maxAngle = angleDiffer;
+        }
+        if (angleDiffer < 0 && angleDiffer*-1 > maxAngle){
+            System.out.println("小于"+angleDiffer);
+            cueText = "rightShoulderSmall";
+            maxAngle = angleDiffer * -1.0;
+        }
     }
 
     void drawAngleLeftKnee(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
-        PointF3D point = midPoint.getPosition3D();
-        double angle = getAngle(firstPoint, midPoint, lastPoint);
-        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
+//        PointF3D point = midPoint.getPosition3D();
+        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - LivePreviewActivity.standardAngle.get("leftKnee");
+//        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
+        if (angleDiffer > 0 && angleDiffer > maxAngle){
+            cueText = "leftKneeLarge";
+            maxAngle = angleDiffer;
+        }
+        if (angleDiffer < 0 && angleDiffer*-1 > maxAngle){
+            System.out.println("小于"+angleDiffer);
+            cueText = "leftKneeSmall";
+            maxAngle = angleDiffer * -1.0;
+        }
 
     }
 
     void drawAngleRightKnee(Canvas canvas, PoseLandmark midPoint, PoseLandmark firstPoint, PoseLandmark lastPoint, Paint paint) {
-        PointF3D point = midPoint.getPosition3D();
-        double angle = getAngle(firstPoint, midPoint, lastPoint);
-        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
-
+//        PointF3D point = midPoint.getPosition3D();
+        double angleDiffer = getAngle(firstPoint, midPoint, lastPoint) - LivePreviewActivity.standardAngle.get("rightKnee");
+//        canvas.drawText(String.valueOf(angle), translateX(point.getX()), translateY(point.getY()), paint);
+        if (angleDiffer > 0 && angleDiffer > maxAngle){
+            cueText = "rightKneeLarge";
+            maxAngle = angleDiffer;
+        }
+        if (angleDiffer < 0 && angleDiffer*-1 > maxAngle){
+            System.out.println("小于"+angleDiffer);
+            cueText = "rightKneeSmall";
+            maxAngle = angleDiffer * -1.0;
+        }
     }
     // 代码群结束
 

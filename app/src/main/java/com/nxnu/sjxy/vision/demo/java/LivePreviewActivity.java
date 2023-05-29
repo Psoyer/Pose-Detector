@@ -48,6 +48,9 @@ public final class LivePreviewActivity extends AppCompatActivity
   private String selectedModel = POSE_DETECTION;
   private TextToSpeech textToSpeech;
   public static String cueText;
+  public static double[] angles;
+  public static HashMap<String, Double> standardAngle;
+  public static String poseRecommendations;
 
   private HashMap<String, String> cueWord;
 
@@ -69,6 +72,18 @@ public final class LivePreviewActivity extends AppCompatActivity
     if (graphicOverlay == null) {
       Log.d(TAG, "graphicOverlay is null");
     }
+
+    // 获取上个页面参数
+    Bundle bundle = this.getIntent().getExtras();
+    angles = (double[]) bundle.get("angles");
+    poseRecommendations = (String) bundle.get("poseRecommendations");
+    standardAngle = new HashMap<>();
+    standardAngle.put("leftElbow", angles[0]);
+    standardAngle.put("rightElbow", angles[1]);
+    standardAngle.put("leftShoulder", angles[2]);
+    standardAngle.put("rightShoulder", angles[3]);
+    standardAngle.put("leftKnee", angles[4]);
+    standardAngle.put("rightKnee", angles[5]);
 
     // 打印当前主线程id
     System.out.println("主线程id：===="+android.os.Process.myTid());

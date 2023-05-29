@@ -8,4 +8,10 @@
 + 人体姿态检测
 + 依据关键点角度判断姿势是否标准
 + 语音实时提醒，例如”您的左手肘角度偏小“
-+ 训练后进行评分（圆形动态分数显示效果）和分析（雷达图显示各个身体部位的错误次数）
++ 训练后进行评分（圆形动态分数显示效果）和分析（雷达图显示的错误次数）
+
+
+<div>
+<img src="https://img1.imgtp.com/2023/05/23/adI1n8vP.jpg" width = "220" align="center"/>
+<img src="https://img1.imgtp.com/2023/05/23/2TFRH1ZG.jpg" width = "220" align="center"/>
+</div>

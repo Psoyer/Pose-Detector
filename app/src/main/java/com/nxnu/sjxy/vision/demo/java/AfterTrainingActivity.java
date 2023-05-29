@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -31,6 +32,10 @@ public class AfterTrainingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_training);
+        // 姿势建议
+        TextView txPoseTypeView = findViewById(R.id.poseType);
+        txPoseTypeView.setText(LivePreviewActivity.poseRecommendations);
+
         // 获取传递来的分析数据
         Bundle bundle = this.getIntent().getExtras();
         for (String item : (String[]) bundle.get("analyzeData")){

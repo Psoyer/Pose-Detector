@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">大创项目</string>
+    <string name="app_name" translatable="false">AI羽毛球教练</string>
     <string name="java_entry_title" translatable="false">点击开始</string>
     <string name="kotlin_entry_title" translatable="false">项目描述</string>
     <string name="ok" translatable="false">OK</string>

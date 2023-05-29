@@ -16,6 +16,7 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.demo.R
+import com.nxnu.sjxy.vision.demo.activity.SelectionInterfaceActivity
 import com.nxnu.sjxy.vision.demo.java.LivePreviewActivity
 import java.util.ArrayList
 
@@ -27,7 +28,7 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
     setContentView(R.layout.activity_vision_entry_choice)
 
     findViewById<TextView>(R.id.java_entry_point).setOnClickListener {
-      val intent = Intent(this@EntryChoiceActivity, LivePreviewActivity::class.java)
+      val intent = Intent(this@EntryChoiceActivity, SelectionInterfaceActivity::class.java)
 
       startActivity(intent)
     }

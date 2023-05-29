@@ -68,11 +68,17 @@
         android:textColor="#000000"
         android:textSize="20sp" />
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="20sp"
-        android:text="在单打时，每次击球后应立即回到中心位置。在双打防守时则应回到与同伴平行的位置，而在双打进攻时则应与同伴保持前后的位置，在双打发球时，发一短球后应立即向前封网以防对手打短球回击！"
-        android:textColor="#000000"
-        android:textSize="15sp" />
+        android:scrollbars="none">
+
+        <TextView
+            android:id="@+id/poseType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20sp"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+    </ScrollView>
 </LinearLayout>
